@@ -33,7 +33,7 @@ public class Main {
                 clientSocket.getOutputStream().write(resposne.getBytes());
             }
             else{
-                String resposne = "HTTP/1.1 400 Not Found\r\n\r\n";
+                String resposne = "HTTP/1.1 404 Not Found\r\n\r\n";
                 clientSocket.getOutputStream().write(resposne.getBytes());
             }
             System.out.println("accepted new connection");
