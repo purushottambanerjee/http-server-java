@@ -28,7 +28,7 @@ public class Main {
             String req = clientIn.readLine();
             String HttpReq[] = req.split(" ",0);
             if(HttpReq[1].equals("/")) {
-                String resposne = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 9\r\n\r\n";
+                String resposne = "HTTP/1.1 200 OK\r\n\r\n";
                 clientSocket.getOutputStream().write(resposne.getBytes());
 
             } else if (HttpReq[1].startsWith("/echo/")){
