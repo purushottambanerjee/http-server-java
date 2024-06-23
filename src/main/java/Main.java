@@ -1,5 +1,4 @@
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -21,9 +20,22 @@ public class Main {
             // ensures that we don't run into 'Address already in use' errors
             serverSocket.setReuseAddress(true);
             clientSocket = serverSocket.accept(); // Wait for connection from client.
-            String resposne = "HTTP/1.1 200 OK\r\n\r\n";
-            clientSocket.getOutputStream().write(resposne.getBytes());
+            //client side conversion of bytes into data.
+            BufferedReader  clientIn = new BufferedReader(
+                    new InputStreamReader(clientSocket.getInputStream()));
 
+            //Read the request
+            String req = clientIn.readLine();
+            System.out.println(req);
+            String HttpReq[] = req.split(" ",0);
+            if(HttpReq[1].equals("/")) {
+                String resposne = "HTTP/1.1 200 OK\r\n\r\n";
+                clientSocket.getOutputStream().write(resposne.getBytes());
+            }
+            else{
+                String resposne = "HTTP/1.1 400 Not Found\r\n\r\n";
+                clientSocket.getOutputStream().write(resposne.getBytes());
+            }
             System.out.println("accepted new connection");
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
