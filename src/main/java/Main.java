@@ -27,13 +27,15 @@ public class Main {
             //Read the request
             String req = clientIn.readLine();
             String HttpReq[] = req.split(" ",0);
-            String path[] = HttpReq[1].split("/",0);
-            System.out.println(path[1]);
-            if(path[1].equals("echo")) {
+            if(HttpReq[1].equals("/")) {
+                String resposne = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 9\r\n\r\n";
+                clientSocket.getOutputStream().write(resposne.getBytes());
+
+            } else if (HttpReq[1].startsWith("/echo/")){
+                String path[] = HttpReq[1].split("/",0);
                 String resposne = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 9\r\n\r\n"+path[2];
                 clientSocket.getOutputStream().write(resposne.getBytes());
-            }
-            else{
+            } else{
                 String resposne = "HTTP/1.1 404 Not Found\r\n\r\n";
                 clientSocket.getOutputStream().write(resposne.getBytes());
             }
