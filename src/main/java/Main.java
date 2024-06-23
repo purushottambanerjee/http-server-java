@@ -33,7 +33,7 @@ public class Main {
 
             } else if (HttpReq[1].startsWith("/echo/")){
                 String path[] = HttpReq[1].split("/",0);
-                String resposne = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 9\r\n\r\n"+path[2];
+                String resposne = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length:"+path[2].length()+"\r\n\r\n"+path[2];
                 clientSocket.getOutputStream().write(resposne.getBytes());
             } else{
                 String resposne = "HTTP/1.1 404 Not Found\r\n\r\n";
