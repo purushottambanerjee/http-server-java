@@ -13,11 +13,13 @@ public class Main {
       String directory="";
       if(args.length>1 && args[0].equals("--directory")){
           directory=args[1];
+          System.out.println(args);
       }
       try {
           //creating new server Socket
           serverSocket = new ServerSocket(4221);
           serverSocket.setReuseAddress(true);
+
           while (true) {
 
               clientSocket = serverSocket.accept(); // Wait for connection from client.
@@ -61,6 +63,7 @@ public class Main {
               else if(URL[1].startsWith("/files")){
                   String filename = URL[1].split("/")[1];
                   File file = new File(directory,filename);
+
                   if(file.exists()){
                       //reading byte content
                       byte[] fileContent = Files.readAllBytes(file.toPath());
