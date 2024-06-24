@@ -26,9 +26,11 @@ public class Main {
             //Read the request
             String req;
             ArrayList<String> HttpReq=new ArrayList<String>();
+
             //read request completely HTTP requests don't end with EOF but with blank line.
             while (!(req = clientIn.readLine()).equals(""))
                 HttpReq.add(req);
+
             System.out.println(HttpReq);
             //Striping URL from the HTTP req
             String URL[] =HttpReq.get(0).split(" ",0);
@@ -42,7 +44,12 @@ public class Main {
                 clientSocket.getOutputStream().write(resposne.getBytes());
             }
             else if (URL[1].startsWith("/user-agent")){
-                String user_agent[] = HttpReq.get(3).split(": ",0);
+                String user_agent[]=new  String[2];
+                for(String s : HttpReq)
+                {
+                    if(s.startsWith("User-Agent"))
+                        user_agent=s.split(": ");
+                }
                 String resposne = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length:"+user_agent[1].length()+"\r\n\r\n"+user_agent[1];
                 clientSocket.getOutputStream().write(resposne.getBytes());
             }
