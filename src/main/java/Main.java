@@ -13,7 +13,7 @@ public class Main {
       String directory="";
       if(args.length>1 && args[0].equals("--directory")){
           directory=args[1];
-          System.out.println(args[0]);
+          System.out.println(args[1]);
       }
       try {
           //creating new server Socket
