@@ -29,7 +29,7 @@ public class Main {
             //read request completely HTTP requests don't end with EOF but with blank line.
             while (!(req = clientIn.readLine()).equals(""))
                 HttpReq.add(req);
-
+            System.out.println(HttpReq);
             //Striping URL from the HTTP req
             String URL[] =HttpReq.get(0).split(" ",0);
             if(URL[1].equals("/")) {
