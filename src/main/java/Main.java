@@ -61,7 +61,7 @@ public class Main {
                   clientSocket.getOutputStream().write(resposne.getBytes());
               }
               else if(URL[1].startsWith("/files")){
-                  String filename = URL[1].split("/")[1];
+                  String filename = URL[1].split("/",0)[2];
                   File file = new File(directory,filename);
                   System.out.println(file.toPath());
                   if(file.exists()){
