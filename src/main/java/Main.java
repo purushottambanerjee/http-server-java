@@ -56,7 +56,7 @@ public class Main {
               else
               {
                   String URL_FULL[] = URL[1].split("/");
-                  String  url_prfix;
+                  String  url_prfix,response;
                   if(URL_FULL.length==0)
                       url_prfix= "";
                   else
@@ -68,17 +68,20 @@ public class Main {
                       case "echo":
                           String path[] = URL[1].split("/", 0);
                           String encoding ="None";
+
                           String accepted[]={"gzip","compress","deflate","br","zstd","identity","*"};
                           for (String s : HttpReq) {
                               if (s.startsWith("Accept-Encoding"))
                                   encoding = s.split(": ")[1];
                           }
+                          System.out.println(Arrays.asList(accepted).contains(encoding));
                           if(encoding!="None" && Arrays.asList(accepted).contains(encoding))
-                              Respond200="HTTP/1.1 200 OK\r\nContent-Encoding:"+encoding+"\r\nContent-Type: text/plain\r\n" +
+                              response="HTTP/1.1 200 OK\r\nContent-Encoding:"+encoding+"\r\nContent-Type: text/plain\r\n" +
                                       "Content-Length:" +path[2].length() + "\r\n\r\n" + path[2];
                           else
-                              Respond200=Respond200+ path[2].length() + "\r\n\r\n" + path[2];
-                          writer.write(Respond200.getBytes());
+                              response=Respond200+ path[2].length() + "\r\n\r\n" + path[2];
+
+                          writer.write(response.getBytes());
                           break;
                       case "files":
                           String filename = URL[1].split("/", 0)[2];
@@ -86,10 +89,10 @@ public class Main {
                           if (file.exists()) {
                               //reading byte content
                               byte[] fileContent = Files.readAllBytes(file.toPath());
-                              String httpResponse =
+                              response =
                                       "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " +
                                               fileContent.length + "\r\n\r\n" + new String(fileContent);
-                              writer.write(httpResponse.getBytes(StandardCharsets.UTF_8));
+                              writer.write(response.getBytes(StandardCharsets.UTF_8));
                           } else {
 
                               writer.write(NotFound.getBytes());
@@ -101,8 +104,8 @@ public class Main {
                               if (s.startsWith("User-Agent"))
                                   user_agent = s.split(": ");
                           }
-                          Respond200+= user_agent[1].length() + "\r\n\r\n" + user_agent[1];
-                          writer.write(Respond200.getBytes());
+                          response=Respond200+ user_agent[1].length() + "\r\n\r\n" + user_agent[1];
+                          writer.write(response.getBytes());
                           break;
                       default:
                           writer.write(NotFound.getBytes());
