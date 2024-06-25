@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
   public static void main(String[] args) {
@@ -39,11 +40,9 @@ public class Main {
               //read request completely HTTP requests don't end with EOF but with blank line.
               while (!(req = clientIn.readLine()).equals(""))
                   HttpReq.add(req);
-
-              System.out.println(HttpReq);
               //Striping URL from the HTTP req
               String URL[] = HttpReq.get(0).split(" ", 0);
-              System.out.println(URL[1]);
+
               if (URL[0].equals("POST")) {
                   StringBuffer data=new StringBuffer();
                   while(clientIn.ready()){
@@ -68,7 +67,17 @@ public class Main {
                           break;
                       case "echo":
                           String path[] = URL[1].split("/", 0);
-                          Respond200=Respond200 + path[2].length() + "\r\n\r\n" + path[2];
+                          String encoding ="None";
+                          String accepted[]={"gzip","compress","deflate","br","zstd","identity","*"};
+                          for (String s : HttpReq) {
+                              if (s.startsWith("Accept-Encoding"))
+                                  encoding = s.split(": ")[1];
+                          }
+                          if(encoding!="None" && Arrays.asList(accepted).contains(encoding))
+                              Respond200="HTTP/1.1 200 OK\r\nContent-Encoding:"+encoding+"\r\nContent-Type: text/plain\r\n" +
+                                      "Content-Length:" +path[2].length() + "\r\n\r\n" + path[2];
+                          else
+                              Respond200=Respond200+ path[2].length() + "\r\n\r\n" + path[2];
                           writer.write(Respond200.getBytes());
                           break;
                       case "files":
