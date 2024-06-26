@@ -1,3 +1,5 @@
+import org.w3c.dom.DOMStringList;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -67,19 +69,21 @@ public class Main {
                           break;
                       case "echo":
                           String path[] = URL[1].split("/", 0);
-                          String encoding ="None";
 
-                          String accepted[]={"gzip","compress","deflate","br","zstd","identity","*"};
+                          response=Respond200+ path[2].length() + "\r\n\r\n" + path[2];
+
                           for (String s : HttpReq) {
+
                               if (s.startsWith("Accept-Encoding"))
-                                  encoding = s.split(": ")[1];
+                              {
+                                  String  encoding[] =s.split(": ")[1].split(",");
+                                  for(String encode:encoding) {
+                                      if(encode.trim().startsWith("gzip"))
+                                      response = "HTTP/1.1 200 OK\r\nContent-Encoding:gzip" + "\r\nContent-Type: text/plain\r\n" +
+                                              "Content-Length:" + path[2].length() + "\r\n\r\n" + path[2];
+                              }
+                              }
                           }
-                          System.out.println(Arrays.asList(accepted).contains(encoding));
-                          if(encoding!="None" && Arrays.asList(accepted).contains(encoding))
-                              response="HTTP/1.1 200 OK\r\nContent-Encoding:"+encoding+"\r\nContent-Type: text/plain\r\n" +
-                                      "Content-Length:" +path[2].length() + "\r\n\r\n" + path[2];
-                          else
-                              response=Respond200+ path[2].length() + "\r\n\r\n" + path[2];
 
                           writer.write(response.getBytes());
                           break;
