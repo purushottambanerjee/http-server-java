@@ -70,11 +70,9 @@ public class Main {
                           break;
                       case "echo":
                           String path[] = URL[1].split("/", 0);
-
+                          boolean flag=true;
                           response=Respond200+ path[2].length() + "\r\n\r\n" + path[2];
-
                           for (String s : HttpReq) {
-
                               if (s.startsWith("Accept-Encoding"))
                               {
                                   String  encoding[] =s.split(": ")[1].split(",");
@@ -91,13 +89,17 @@ public class Main {
                                           }
                                           byte[] gzipData = byteArrayOutputStream.toByteArray();
                                           response = "HTTP/1.1 200 OK\r\nContent-Encoding:gzip" + "\r\nContent-Type: text/plain\r\n" +
-                                                  "Content-Length:" + gzipData.length + "\r\n\r\n"+gzipData;
+                                                  "Content-Length:" + gzipData.length + "\r\n\r\n";
+                                          flag=true;
+                                          writer.write(response.getBytes());
+                                          writer.write(gzipData);
+
                                       }
-                              }
+                                  }
                               }
                           }
-
-                          writer.write(response.getBytes());
+                          if(flag==false)
+                              writer.write(response.getBytes());
                           break;
                       case "files":
                           String filename = URL[1].split("/", 0)[2];
