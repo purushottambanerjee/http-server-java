@@ -70,7 +70,7 @@ public class Main {
                           break;
                       case "echo":
                           String path[] = URL[1].split("/", 0);
-                          boolean flag=true;
+                          boolean flag=false;
                           response=Respond200+ path[2].length() + "\r\n\r\n" + path[2];
                           for (String s : HttpReq) {
                               if (s.startsWith("Accept-Encoding"))
