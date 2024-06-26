@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.zip.GZIPOutputStream;
 
 public class Main {
   public static void main(String[] args) {
@@ -79,8 +80,19 @@ public class Main {
                                   String  encoding[] =s.split(": ")[1].split(",");
                                   for(String encode:encoding) {
                                       if(encode.trim().startsWith("gzip"))
-                                      response = "HTTP/1.1 200 OK\r\nContent-Encoding:gzip" + "\r\nContent-Type: text/plain\r\n" +
-                                              "Content-Length:" + path[2].length() + "\r\n\r\n" + path[2];
+                                      {
+
+                                          // Compress the response body using gzip
+                                          ByteArrayOutputStream byteArrayOutputStream =
+                                                  new ByteArrayOutputStream();
+                                          try (GZIPOutputStream gzipOutputStream =
+                                                       new GZIPOutputStream(byteArrayOutputStream)) {
+                                              gzipOutputStream.write(path[2].getBytes("UTF-8"));
+                                          }
+                                          byte[] gzipData = byteArrayOutputStream.toByteArray();
+                                          response = "HTTP/1.1 200 OK\r\nContent-Encoding:gzip" + "\r\nContent-Type: text/plain\r\n" +
+                                                  "Content-Length:" + gzipData.length + "\r\n\r\n"+gzipData;
+                                      }
                               }
                               }
                           }
